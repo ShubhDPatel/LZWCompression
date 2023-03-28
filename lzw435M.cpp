@@ -245,12 +245,19 @@ std::vector<int> getCompressedFile(std::string fileName)
         content.push_back(binaryString2Int(s.substr(i, bits)));
     } */
 
-    for (long i = 0; i < s.length();)
+    for (int i = 0; i < s.length();)
     {
-        long bits = binaryString2Int(s.substr(i, 5));  // Read the bits value stored with the compressed data
-        i += 5; // move the pointer along by the number of bits used to store the bits value
-        content.push_back(binaryString2Int(s.substr(i, bits)));
-        i += bits;
+        int bits = binaryString2Int(s.substr(i, 5));
+        i += 5;
+        if (i + bits <= s.length()) // Add a check to ensure we do not access beyond the string length
+        {
+            content.push_back(binaryString2Int(s.substr(i, bits)));
+            i += bits;
+        }
+        else
+        {
+            break;
+        }
     }
     return content;
 }
