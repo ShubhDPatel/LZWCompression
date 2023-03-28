@@ -127,12 +127,12 @@ void writeCompressed(std::vector<int>& compressed, std::string fileName)
     std::string p;
     std::string bcode= "";
 
-    //int counter = 0;
+    int counter = 0;
     for (std::vector<int>::iterator it = compressed.begin() ; it != compressed.end(); ++it)
     {
         //++counter;
-        //bits = 9;
-        /*
+        bits = 9;
+        
         if (counter < 512)
         {
             bits = 10;
@@ -161,7 +161,7 @@ void writeCompressed(std::vector<int>& compressed, std::string fileName)
         {
             bits = 16;
         }
-        */
+        
         p = int2BinaryString(*it, bits);
         //std::cout << "c=" << *it <<" : binary string (12bits) ="<<p<<"; back to code=" << binaryString2Int(p)<<"\n";
         bcode += p;
