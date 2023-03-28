@@ -130,7 +130,7 @@ void writeCompressed(std::vector<int>& compressed, std::string fileName)
     int counter = 0;
     for (std::vector<int>::iterator it = compressed.begin() ; it != compressed.end(); ++it)
     {
-        //++counter;
+        ++counter;
         bits = 9;
         
         if (counter < 512)
