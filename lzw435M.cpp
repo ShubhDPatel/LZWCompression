@@ -1,7 +1,6 @@
 /*
     Shubh Patel, sdp66@uakron.edu
     Project 2 LZW for algorithms.
-
     Uses lzw algorithm to compress and decompress a input file.
 */
 #include <string>
@@ -83,7 +82,7 @@ int main(int argc, char* argv[])
         readFrom.close();
         std::cout << "Operation finished successfully!\n";
     }
-    
+
     // Decompress the file
     if(*argv[1] == 'e')
     {
@@ -121,7 +120,7 @@ int main(int argc, char* argv[])
 void writeCompressed(std::vector<int>& compressed, std::string fileName)
 {
     //length of the code
-    int bits = 9;
+    int bits = 9; // 16
 
     // binary string and code
     std::string p;
@@ -131,6 +130,7 @@ void writeCompressed(std::vector<int>& compressed, std::string fileName)
     for (std::vector<int>::iterator it = compressed.begin() ; it != compressed.end(); ++it)
     {
         ++counter;
+        //bits = 9;
         
         if (counter < 512)
         {
@@ -161,16 +161,19 @@ void writeCompressed(std::vector<int>& compressed, std::string fileName)
             bits = 16;
         }
         
-        p = int2BinaryString(*it, bits);
+        //p = int2BinaryString(*it, bits);
         //std::cout << "c=" << *it <<" : binary string (12bits) ="<<p<<"; back to code=" << binaryString2Int(p)<<"\n";
-        bcode += p;
+        //bcode += p;
+
+        p = int2BinaryString(*it, bits);
+        bcode += int2BinaryString(bits, 5) + p;
     }
-    
+
     //writing to file
     //std::cout << "string 2 save : "<<bcode << "\n";
     std::ofstream myfile;
     myfile.open(fileName.c_str(), std::ios::binary);
-    
+
     std::string zeros = "00000000";
     if (bcode.size() % 8 != 0) // make sure the length of the binary string is a multiple of 8
     {
@@ -200,16 +203,16 @@ std::vector<int> getCompressedFile(std::string fileName)
 {
     std::ifstream myfile2;
     myfile2.open (fileName.c_str(),  std::ios::binary);
-    
+
     struct stat filestatus;
     stat(fileName.c_str(), &filestatus);
     long fsize = filestatus.st_size; //get the size of the file in bytes
-    
+
     std::string zeros = "00000000";
-    int bits = 16;
+    int bits = 9;
     char c2[fsize];
     myfile2.read(c2, fsize);
-    
+
     std::string s = "";
     long count = 0;
     while(count < fsize)
@@ -236,10 +239,18 @@ std::vector<int> getCompressedFile(std::string fileName)
     {
         s = std::string(s.data(), (s.size() / bits) * bits);
     }
-    
+    /*
     for (int i = 0; i < s.length(); i += bits)
     {
         content.push_back(binaryString2Int(s.substr(i, bits)));
+    } */
+
+    for (long i = 0; i < s.length();)
+    {
+        long bits = binaryString2Int(s.substr(i, 5));  // Read the bits value stored with the compressed data
+        i += 5; // move the pointer along by the number of bits used to store the bits value
+        content.push_back(binaryString2Int(s.substr(i, bits)));
+        i += bits;
     }
     return content;
 }
