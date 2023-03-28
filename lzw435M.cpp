@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
 void writeCompressed(std::vector<int>& compressed, std::string fileName)
 {
     //length of the code
-    int bits = 16;
+    int bits = 9;
 
     // binary string and code
     std::string p;
@@ -131,7 +131,6 @@ void writeCompressed(std::vector<int>& compressed, std::string fileName)
     for (std::vector<int>::iterator it = compressed.begin() ; it != compressed.end(); ++it)
     {
         ++counter;
-        bits = 9;
         
         if (counter < 512)
         {
@@ -346,7 +345,7 @@ template <typename Iterator>
 std::string decompress(Iterator begin, Iterator end)
 {
     // Build the dictionary.
-    int dictSize = 256;
+    int dictSize = 65536;
     std::map<int,std::string> dictionary;
     for (int i = 0; i < dictSize; i++)
     {
